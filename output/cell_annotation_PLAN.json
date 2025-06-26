@@ -1,0 +1,129 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Load the single-cell dataset from the provided JSON file containing variables nCount_RNA, nFeature_RNA, percent.mt, and nCount_SCT. Convert the data into an AnnData object format to facilitate downstream analysis using Scanpy and related Python tools.",
+            "input_filename": [
+                "./data/cell_annotation/dataset_debug_cleaned.json: contains variables nCount_RNA, nFeature_RNA, percent.mt, nCount_SCT"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/adata_raw.h5ad: raw AnnData object containing unprocessed single-cell gene expression and metadata"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Perform quality control filtering on the AnnData object based on standard criteria: include cells with mitochondrial gene percentage less than or equal to 20%, more than 500 total UMIs, and acceptable gene feature counts. This filtering removes low-quality or dead cells to ensure robust downstream analysis.",
+            "input_filename": [
+                "./output/cell_annotation/adata_raw.h5ad: raw AnnData object containing unprocessed single-cell gene expression and metadata"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/adata_filtered.h5ad: quality controlled AnnData object retained high-quality cells"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Normalize the filtered data using total-count normalization and log-transformation. Subsequently, identify highly variable genes (HVGs) using Scanpy's methods. This step produces a normalized and dimensionally relevant dataset optimized for clustering and classification.",
+            "input_filename": [
+                "./output/cell_annotation/adata_filtered.h5ad: quality controlled AnnData object retained high-quality cells"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/adata_norm_hvg.h5ad: normalized AnnData object with highly variable genes annotated"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Reduce dimensionality of the normalized data by performing PCA to capture major variance components. Construct a k-nearest neighbors graph based on PCA components to prepare for clustering and visualization.",
+            "input_filename": [
+                "./output/cell_annotation/adata_norm_hvg.h5ad: normalized AnnData object with highly variable genes annotated"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/adata_pca_neighbors.h5ad: AnnData object with PCA and neighborhood graph computed"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 5,
+            "description": "Cluster the cells into subpopulations using the Leiden algorithm applied to the constructed neighborhood graph. Visualize clusters by computing and plotting UMAP embeddings for intuitive representation of transcriptional similarity.",
+            "input_filename": [
+                "./output/cell_annotation/adata_pca_neighbors.h5ad: AnnData object with PCA and neighborhood graph computed"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/adata_clustered.h5ad: AnnData object with Leiden clusters and UMAP embeddings",
+                "./output/cell_annotation/umap_clusters.png: UMAP visualization plot of clustered cells"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 6,
+            "description": "Conduct differential expression analysis (DEA) between identified clusters to determine marker genes distinguishing cell populations. Rename result columns to logFC, pvals, and adj_pvals for consistency. This analysis helps identify genes involved in malignancy status.",
+            "input_filename": [
+                "./output/cell_annotation/adata_clustered.h5ad: AnnData object with Leiden clusters and UMAP embeddings"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/cluster_marker_genes.csv: table of differentially expressed genes with renamed columns"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 7,
+            "description": "Filter the differentially expressed genes by applying significance thresholds (adjusted p-value < 0.05, logFC > 1) to extract high-confidence marker genes potentially linked to malignancy.",
+            "input_filename": [
+                "./output/cell_annotation/cluster_marker_genes.csv: table of differentially expressed genes with renamed columns"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/filtered_marker_genes.csv: filtered high-confidence marker genes"
+            ],
+            "tools": "Pandas"
+        },
+        {
+            "step_number": 8,
+            "description": "Annotate cell types and classify cells as malignant or non-malignant by integrating the filtered high-confidence marker genes with the normalized AnnData object and cluster labels. Use Python tools such as Scanpy and CellTypist for automated and manual annotation, producing updated cell type labels and malignancy status in adata.obs.",
+            "input_filename": [
+                "./output/cell_annotation/filtered_marker_genes.csv: filtered high-confidence marker genes",
+                "./output/cell_annotation/adata_clustered.h5ad: AnnData object with Leiden clusters and UMAP embeddings"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations",
+                "./output/cell_annotation/umap_annotation.png: UMAP visualization with annotated cell types and malignancy status"
+            ],
+            "tools": "Scanpy, CellTypist, Pandas"
+        },
+        {
+            "step_number": 9,
+            "description": "Optionally, perform pseudotime trajectory analysis on the annotated AnnData object to understand malignant progression and cell state transitions. Utilize Scanpy to compute diffusion maps and generate trajectory visualizations overlaying cluster and malignancy labels.",
+            "input_filename": [
+                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/umap_diffmap_trajectory.png: UMAP plot overlaid with diffusion map pseudotime trajectory"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 10,
+            "description": "Perform cluster purity and functional heterogeneity analysis on subpopulations to evaluate homogeneity and biological functions associated with malignancy. Compute Gini coefficients and run Wilcoxon tests for gene dispersion, outputting cluster purity tables and marker gene lists.",
+            "input_filename": [
+                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/cluster_purity.csv: cluster purity assessment",
+                "./output/cell_annotation/cluster_markers.csv: marker gene lists for functional heterogeneity"
+            ],
+            "tools": "Scanpy, Pandas"
+        },
+        {
+            "step_number": 11,
+            "description": "Build regulatory networks by integrating transcription factor activity scores from the annotated AnnData object with TF-target databases. Use Decoupler package for TF activity inference and correlation analysis to elucidate regulatory mechanisms underlying malignancy status, outputting TF activity matrices.",
+            "input_filename": [
+                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/tf_activity.csv: transcription factor activity matrix"
+            ],
+            "tools": "Decoupler, Scanpy"
+        }
+    ]
+}

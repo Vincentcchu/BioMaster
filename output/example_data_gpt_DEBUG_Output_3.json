@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -c bioconda samtools -y",
+        "samtools view -S -b ./output/001/aligned.sam > ./output/001/aligned.bam",
+        "samtools sort ./output/001/aligned.bam -o ./output/001/aligned.sorted.bam"
+    ],
+    "analyze": "The commands install samtools, convert SAM file to BAM format, then sort the BAM file to generate a coordinate-sorted BAM file as requested. The input SAM file and the output sorted BAM file are correctly specified. The shell commands meet the task requirements for preparing the BAM file for downstream processing.",
+    "output_filename": [
+        "./output/001/aligned.sorted.bam"
+    ],
+    "stats": true
+}

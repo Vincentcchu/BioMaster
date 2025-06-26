@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y -c bioconda gatk4 samtools openjdk",
+        "gatk MarkDuplicates -I ./output/001/aligned.sorted.bam -O ./output/001/aligned.dedup.bam -M ./output/001/marked_dup_metrics.txt --REMOVE_DUPLICATES false --VALIDATION_STRINGENCY SILENT",
+        "samtools index ./output/001/aligned.dedup.bam"
+    ],
+    "analyze": "The original script had improper line continuation characters which can cause parsing errors in shell. The corrected version removes backslashes and ensures commands are on single lines. The commands correctly install necessary packages, run GATK MarkDuplicates with provided inputs, produce deduplicated BAM and metrics file, and index the output BAM file. This matches the task requirements and uses standard usage of GATK MarkDuplicates and samtools index.",
+    "output_filename": [
+        "./output/001/aligned.dedup.bam"
+    ],
+    "stats": true
+}

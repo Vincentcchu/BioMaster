@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y -c bioconda fastp",
+        "fastp -i ./data/WGS_WES/rnaseq_1.fastq.gz -I ./data/WGS_WES/rnaseq_2.fastq.gz -o ./output/001/clean_rnaseq_1.fastq.gz -O ./output/001/clean_rnaseq_2.fastq.gz"
+    ],
+    "analyze": "Task executed correctly with appropriate fastp commands for paired-end reads. Input files specified correctly excluding irrelevant genome fasta file. Outputs are cleaned paired fastq files ready for downstream analysis. No errors detected.",
+    "output_filename": [
+        "./output/001/clean_rnaseq_1.fastq.gz",
+        "./output/001/clean_rnaseq_2.fastq.gz"
+    ],
+    "stats": true
+}

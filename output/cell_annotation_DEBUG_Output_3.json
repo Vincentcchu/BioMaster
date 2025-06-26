@@ -1,0 +1,11 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "python -c \"import scanpy as sc; adata = sc.read_h5ad('./output/cell_annotation/adata_filtered.h5ad'); sc.pp.normalize_total(adata); sc.pp.log1p(adata); sc.pp.highly_variable_genes(adata); adata.write('./output/cell_annotation/adata_norm_hvg.h5ad')\""
+    ],
+    "analyze": "The installation of scanpy was successful with all dependencies satisfied. The provided python command correctly executes total-count normalization, logarithmic transformation, and identification of highly variable genes on the input AnnData object, then writes the normalized and annotated AnnData to the specified output file. The main failure reason previously was the absence of the input file './output/cell_annotation/adata_filtered.h5ad'. To proceed, ensure the input file exists at this path. Once present, the command will complete the normalization and HVG detection as required by the task.",
+    "output_filename": [
+        "./output/cell_annotation/adata_norm_hvg.h5ad"
+    ],
+    "stats": false
+}

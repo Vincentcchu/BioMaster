@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y -c bioconda bwa samtools",
+        "bwa index ./data/WGS_WES/minigenome.fa",
+        "bwa mem -M ./data/WGS_WES/minigenome.fa ./output/001/clean_rnaseq_1.fastq.gz ./output/001/clean_rnaseq_2.fastq.gz > ./output/001/aligned.sam"
+    ],
+    "analyze": "The error in the previous execution was caused by missing input file './output/001/clean_rnaseq_1.fastq.gz'. The corrected commands assume this file now exists in the specified path and run bwa index first to build the reference index, followed by bwa mem for paired-end read alignment. The output is a SAM file as required. Samtools is also installed for downstream processing.",
+    "output_filename": [
+        "./output/001/aligned.sam"
+    ],
+    "stats": true
+}

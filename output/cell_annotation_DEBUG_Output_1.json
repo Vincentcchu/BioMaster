@@ -1,0 +1,11 @@
+{
+    "shell": [
+        "conda install -y -c conda-forge scanpy",
+        "python -c \"import json, scanpy as sc, anndata as ad; import numpy as np; f=open('./data/cell_annotation/dataset_debug_cleaned.json','r'); data=json.load(f); f.close(); gene_names = list(data.keys()); values = np.array([data[g] for g in gene_names]).T; adata = ad.AnnData(X=values); adata.var_names = gene_names; adata.write('./output/cell_annotation/adata_raw.h5ad')\""
+    ],
+    "analyze": "The task is to load a single-cell dataset from the JSON file, convert it to an AnnData object, and save it for downstream scanpy analysis. The environment includes scanpy which is installed via conda-forge. The provided command installs scanpy if not present. The script reads the JSON, converts it into a numerical matrix, constructs an AnnData object with gene names as variable names, and saves it in h5ad format. This meets the requirement to facilitate downstream analysis using scanpy and Python tools.",
+    "output_filename": [
+        "./output/cell_annotation/adata_raw.h5ad"
+    ],
+    "stats": true
+}

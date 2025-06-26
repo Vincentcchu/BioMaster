@@ -1,0 +1,16 @@
+{
+    "shell": [
+        "conda install -y -c bioconda gatk4 samtools",
+        "rm -f ./data/WGS_WES/minigenome.dict",
+        "samtools faidx ./data/WGS_WES/minigenome.fa",
+        "gatk CreateSequenceDictionary -R ./data/WGS_WES/minigenome.fa -O ./data/WGS_WES/minigenome.dict",
+        "gatk BaseRecalibrator -R ./data/WGS_WES/minigenome.fa -I ./output/001/aligned.dedup.bam --known-sites ./data/WGS_WES/known_sites.vcf -O ./output/001/recal_data.table",
+        "gatk ApplyBQSR -R ./data/WGS_WES/minigenome.fa -I ./output/001/aligned.dedup.bam --bqsr-recal-file ./output/001/recal_data.table -O ./output/001/aligned.dedup.recal.bam",
+        "samtools index ./output/001/aligned.dedup.recal.bam"
+    ],
+    "analyze": "The previous error was due to an existing fasta dictionary file, which prevented creation of a new one. The fix is to remove the existing minigenome.dict before recreating it. All necessary steps including installing gatk4 and samtools, creating fasta index and dictionary, running BaseRecalibrator with the known sites VCF, applying BQSR, and indexing the output BAM file are included. Ensure that the input BAM and known sites VCF files exist and paths are correct for successful execution.",
+    "output_filename": [
+        "./output/001/aligned.dedup.recal.bam"
+    ],
+    "stats": false
+}

@@ -1,0 +1,76 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Perform raw data quality control on the paired-end RNA-Seq fastq files using fastp. This step will remove low-quality bases and sequencing adapters to obtain high-quality cleaned reads for reliable downstream analysis. The inputs are the raw paired-end fastq files, and the output will be cleaned fastq files with improved quality, ready for alignment.",
+            "input_filename": [
+                "./data/WGS_WES/rnaseq_1.fastq.gz: RNA-Seq read 1 data (left read)",
+                "./data/WGS_WES/rnaseq_2.fastq.gz: RNA-Seq read 2 data (right read)"
+            ],
+            "output_filename": [
+                "./output/001/clean_rnaseq_1.fastq.gz: cleaned RNA-Seq read 1 data",
+                "./output/001/clean_rnaseq_2.fastq.gz: cleaned RNA-Seq read 2 data"
+            ],
+            "tools": "fastp"
+        },
+        {
+            "step_number": 2,
+            "description": "Align the quality-controlled paired-end reads to the small reference genome using BWA-MEM. This step maps sequencing reads to the reference to generate an alignment file. The output will be a SAM file that contains the mapped reads, which will be sorted for downstream processing.",
+            "input_filename": [
+                "./output/001/clean_rnaseq_1.fastq.gz: cleaned RNA-Seq read 1 data",
+                "./output/001/clean_rnaseq_2.fastq.gz: cleaned RNA-Seq read 2 data",
+                "./data/WGS_WES/minigenome.fa: small genome sequence consisting of ~750 genes."
+            ],
+            "output_filename": [
+                "./output/001/aligned.sam: reads aligned to reference genome"
+            ],
+            "tools": "BWA-MEM"
+        },
+        {
+            "step_number": 3,
+            "description": "Convert the SAM file to a BAM file, then sort the BAM file using samtools to prepare it for duplicate marking and recalibration. Sorted BAM files enable efficient processing in downstream tasks.",
+            "input_filename": [
+                "./output/001/aligned.sam: reads aligned to reference genome"
+            ],
+            "output_filename": [
+                "./output/001/aligned.sorted.bam: sorted BAM format of aligned reads"
+            ],
+            "tools": "samtools"
+        },
+        {
+            "step_number": 4,
+            "description": "Mark and remove PCR duplicates using GATK MarkDuplicates to reduce biases introduced by amplification. This step outputs a deduplicated BAM file which is essential for accurate variant calling.",
+            "input_filename": [
+                "./output/001/aligned.sorted.bam: sorted BAM format of aligned reads"
+            ],
+            "output_filename": [
+                "./output/001/aligned.dedup.bam: deduplicated BAM file"
+            ],
+            "tools": "GATK MarkDuplicates"
+        },
+        {
+            "step_number": 5,
+            "description": "Perform base quality score recalibration (BQSR) using GATK BaseRecalibrator to correct systematic errors made by the sequencing machine, improving variant call accuracy. The output is a recalibrated BAM file.",
+            "input_filename": [
+                "./output/001/aligned.dedup.bam: deduplicated BAM file"
+            ],
+            "output_filename": [
+                "./output/001/aligned.dedup.recal.bam: base quality score recalibrated BAM file"
+            ],
+            "tools": "GATK BaseRecalibrator"
+        },
+        {
+            "step_number": 6,
+            "description": "Detect somatic structural variants including SNVs and indels in the processed BAM file. For this WGS/WES task, perform somatic variant calling with a focus on SNVs and indels. The raw VCF results will contain somatic mutation loci.",
+            "input_filename": [
+                "./output/001/aligned.dedup.recal.bam: base quality score recalibrated BAM file"
+            ],
+            "output_filename": [
+                "./output/001/somatic_snv_indel.vcf: somatic SNV and indel variant calls"
+            ],
+            "tools": [
+                "GATK Mutect2 or other somatic SNV/indel caller"
+            ]
+        }
+    ]
+}

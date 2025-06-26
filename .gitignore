@@ -1,0 +1,8 @@
+# Large files exceeding GitHub's 100MB limit
+data/cell_annotation/dataset_debug_with_malignancy.h5ad
+data/cell_annotation/dataset_debug_cleaned.h5ad
+*.h5ad
+*.bam
+
+# Configuration file with sensitive info
+config.yaml
