@@ -2,128 +2,59 @@
     "plan": [
         {
             "step_number": 1,
-            "description": "Load the single-cell dataset from the provided JSON file containing variables nCount_RNA, nFeature_RNA, percent.mt, and nCount_SCT. Convert the data into an AnnData object format to facilitate downstream analysis using Scanpy and related Python tools.",
+            "description": "Perform quality control (QC) filtering on the single-cell RNA-seq dataset using Scanpy. In this step, low quality cells (e.g., cells with high mitochondrial gene percentage or low UMI counts) and low expressed genes are filtered out to ensure that subsequent analyses are based on high-quality data. The filtered AnnData object will be output for further processing.",
             "input_filename": [
-                "./data/cell_annotation/dataset_debug_cleaned.json: contains variables nCount_RNA, nFeature_RNA, percent.mt, nCount_SCT"
+                "./data/cell_annotation/dataset_debug_cleaned.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
             ],
             "output_filename": [
-                "./output/cell_annotation/adata_raw.h5ad: raw AnnData object containing unprocessed single-cell gene expression and metadata"
+                "./output/cell_annotation/filtered_dataset.h5ad: QC-filtered single-cell RNA-seq dataset"
             ],
             "tools": "Scanpy"
         },
         {
             "step_number": 2,
-            "description": "Perform quality control filtering on the AnnData object based on standard criteria: include cells with mitochondrial gene percentage less than or equal to 20%, more than 500 total UMIs, and acceptable gene feature counts. This filtering removes low-quality or dead cells to ensure robust downstream analysis.",
+            "description": "Normalize the QC-filtered data and identify highly variable genes (HVGs) using Scanpy. This includes total count normalization, log transformation, and the detection of HVGs that will be used for downstream clustering and dimensionality reduction.",
             "input_filename": [
-                "./output/cell_annotation/adata_raw.h5ad: raw AnnData object containing unprocessed single-cell gene expression and metadata"
+                "./output/cell_annotation/filtered_dataset.h5ad: QC-filtered single-cell RNA-seq dataset"
             ],
             "output_filename": [
-                "./output/cell_annotation/adata_filtered.h5ad: quality controlled AnnData object retained high-quality cells"
+                "./output/cell_annotation/normalized_dataset.h5ad: Normalized and HVG-selected single-cell RNA-seq dataset"
             ],
             "tools": "Scanpy"
         },
         {
             "step_number": 3,
-            "description": "Normalize the filtered data using total-count normalization and log-transformation. Subsequently, identify highly variable genes (HVGs) using Scanpy's methods. This step produces a normalized and dimensionally relevant dataset optimized for clustering and classification.",
+            "description": "Perform dimensionality reduction and clustering analysis using Scanpy to explore the transcriptional landscape of the cells. This step includes principal component analysis (PCA), constructing a nearest-neighbors graph, applying Leiden clustering, and generating UMAP or t-SNE visualizations. The resulting clustering information will be used to distinguish potential malignant from non-malignant cells.",
             "input_filename": [
-                "./output/cell_annotation/adata_filtered.h5ad: quality controlled AnnData object retained high-quality cells"
+                "./output/cell_annotation/normalized_dataset.h5ad: Normalized and HVG-selected single-cell RNA-seq dataset"
             ],
             "output_filename": [
-                "./output/cell_annotation/adata_norm_hvg.h5ad: normalized AnnData object with highly variable genes annotated"
+                "./output/cell_annotation/clusters_annotated.h5ad: AnnData object with dimensionality reduction results and cluster labels"
             ],
             "tools": "Scanpy"
         },
         {
             "step_number": 4,
-            "description": "Reduce dimensionality of the normalized data by performing PCA to capture major variance components. Construct a k-nearest neighbors graph based on PCA components to prepare for clustering and visualization.",
+            "description": "Identify marker genes for each cluster via differential expression analysis using Scanpy. By comparing gene expression between clusters, this step will help to reveal marker genes indicative of malignant transformation. The output will be a table (CSV) listing marker genes with associated statistics, which will guide the classification of cells.",
             "input_filename": [
-                "./output/cell_annotation/adata_norm_hvg.h5ad: normalized AnnData object with highly variable genes annotated"
+                "./output/cell_annotation/clusters_annotated.h5ad: AnnData object with dimensionality reduction results and cluster labels"
             ],
             "output_filename": [
-                "./output/cell_annotation/adata_pca_neighbors.h5ad: AnnData object with PCA and neighborhood graph computed"
+                "./output/cell_annotation/cluster_markers.csv: Differential expression marker gene list for clusters"
             ],
-            "tools": "Scanpy"
+            "tools": "Scanpy, pandas"
         },
         {
             "step_number": 5,
-            "description": "Cluster the cells into subpopulations using the Leiden algorithm applied to the constructed neighborhood graph. Visualize clusters by computing and plotting UMAP embeddings for intuitive representation of transcriptional similarity.",
+            "description": "Classify cells as malignant or non-malignant by annotating the cell types based on the identified marker genes and known malignant markers. Using Scanpy and celltypist (with assistance from pandas for data handling), this step assigns a new cell label (e.g., 'malignant' or 'non-malignant') in the AnnData object based on the expression profiles of key marker genes.",
             "input_filename": [
-                "./output/cell_annotation/adata_pca_neighbors.h5ad: AnnData object with PCA and neighborhood graph computed"
+                "./output/cell_annotation/clusters_annotated.h5ad: AnnData object with dimensionality reduction results and cluster labels",
+                "./output/cell_annotation/cluster_markers.csv: Differential expression marker gene list for clusters"
             ],
             "output_filename": [
-                "./output/cell_annotation/adata_clustered.h5ad: AnnData object with Leiden clusters and UMAP embeddings",
-                "./output/cell_annotation/umap_clusters.png: UMAP visualization plot of clustered cells"
+                "./output/cell_annotation/malignant_classification.h5ad: Annotated single-cell dataset with malignant/non-malignant classification"
             ],
-            "tools": "Scanpy"
-        },
-        {
-            "step_number": 6,
-            "description": "Conduct differential expression analysis (DEA) between identified clusters to determine marker genes distinguishing cell populations. Rename result columns to logFC, pvals, and adj_pvals for consistency. This analysis helps identify genes involved in malignancy status.",
-            "input_filename": [
-                "./output/cell_annotation/adata_clustered.h5ad: AnnData object with Leiden clusters and UMAP embeddings"
-            ],
-            "output_filename": [
-                "./output/cell_annotation/cluster_marker_genes.csv: table of differentially expressed genes with renamed columns"
-            ],
-            "tools": "Scanpy"
-        },
-        {
-            "step_number": 7,
-            "description": "Filter the differentially expressed genes by applying significance thresholds (adjusted p-value < 0.05, logFC > 1) to extract high-confidence marker genes potentially linked to malignancy.",
-            "input_filename": [
-                "./output/cell_annotation/cluster_marker_genes.csv: table of differentially expressed genes with renamed columns"
-            ],
-            "output_filename": [
-                "./output/cell_annotation/filtered_marker_genes.csv: filtered high-confidence marker genes"
-            ],
-            "tools": "Pandas"
-        },
-        {
-            "step_number": 8,
-            "description": "Annotate cell types and classify cells as malignant or non-malignant by integrating the filtered high-confidence marker genes with the normalized AnnData object and cluster labels. Use Python tools such as Scanpy and CellTypist for automated and manual annotation, producing updated cell type labels and malignancy status in adata.obs.",
-            "input_filename": [
-                "./output/cell_annotation/filtered_marker_genes.csv: filtered high-confidence marker genes",
-                "./output/cell_annotation/adata_clustered.h5ad: AnnData object with Leiden clusters and UMAP embeddings"
-            ],
-            "output_filename": [
-                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations",
-                "./output/cell_annotation/umap_annotation.png: UMAP visualization with annotated cell types and malignancy status"
-            ],
-            "tools": "Scanpy, CellTypist, Pandas"
-        },
-        {
-            "step_number": 9,
-            "description": "Optionally, perform pseudotime trajectory analysis on the annotated AnnData object to understand malignant progression and cell state transitions. Utilize Scanpy to compute diffusion maps and generate trajectory visualizations overlaying cluster and malignancy labels.",
-            "input_filename": [
-                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations"
-            ],
-            "output_filename": [
-                "./output/cell_annotation/umap_diffmap_trajectory.png: UMAP plot overlaid with diffusion map pseudotime trajectory"
-            ],
-            "tools": "Scanpy"
-        },
-        {
-            "step_number": 10,
-            "description": "Perform cluster purity and functional heterogeneity analysis on subpopulations to evaluate homogeneity and biological functions associated with malignancy. Compute Gini coefficients and run Wilcoxon tests for gene dispersion, outputting cluster purity tables and marker gene lists.",
-            "input_filename": [
-                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations"
-            ],
-            "output_filename": [
-                "./output/cell_annotation/cluster_purity.csv: cluster purity assessment",
-                "./output/cell_annotation/cluster_markers.csv: marker gene lists for functional heterogeneity"
-            ],
-            "tools": "Scanpy, Pandas"
-        },
-        {
-            "step_number": 11,
-            "description": "Build regulatory networks by integrating transcription factor activity scores from the annotated AnnData object with TF-target databases. Use Decoupler package for TF activity inference and correlation analysis to elucidate regulatory mechanisms underlying malignancy status, outputting TF activity matrices.",
-            "input_filename": [
-                "./output/cell_annotation/adata_annotated.h5ad: AnnData object with cell type and malignancy classification annotations"
-            ],
-            "output_filename": [
-                "./output/cell_annotation/tf_activity.csv: transcription factor activity matrix"
-            ],
-            "tools": "Decoupler, Scanpy"
+            "tools": "Scanpy, celltypist, pandas"
         }
     ]
 }

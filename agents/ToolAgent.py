@@ -67,7 +67,11 @@ def Json_Format_Agent(json_string, api_key, base_url, tool_model="gpt-4o-mini", 
     else:
         # Use OpenAI API for JSON formatting
         prompt = ChatPromptTemplate.from_template(_JSON_FORMAT_PROMPT)
-        model = ChatOpenAI(temperature=0, model=tool_model, api_key=api_key, base_url=base_url)
+        # Check if model is o3-mini series which doesn't support temperature parameter
+        if "o3-mini" in tool_model:
+            model = ChatOpenAI(model=tool_model, api_key=api_key, base_url=base_url)
+        else:
+            model = ChatOpenAI(temperature=0, model=tool_model, api_key=api_key, base_url=base_url)
         chain = prompt | model | StrOutputParser()
         corrected_json = chain.invoke({"json_string": json_string})
         return corrected_json

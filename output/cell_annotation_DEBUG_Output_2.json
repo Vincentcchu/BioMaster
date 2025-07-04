@@ -1,11 +1,8 @@
 {
-    "shell": [
-        "conda install -y -c conda-forge -c bioconda python scanpy",
-        "python -c \"import scanpy as sc; import numpy as np; adata = sc.read_h5ad('./output/cell_annotation/adata_raw.h5ad'); mito_genes = adata.var_names.str.upper().str.startswith('MT-'); if hasattr(adata.X, 'A1'): percent_mito = np.sum(adata[:, mito_genes].X, axis=1).A1 / np.sum(adata.X, axis=1).A1 * 100 else: percent_mito = np.sum(adata[:, mito_genes].X, axis=1) / np.sum(adata.X, axis=1) * 100; adata.obs['percent_mito'] = percent_mito; sc.pp.calculate_qc_metrics(adata, inplace=True); adata = adata[adata.obs['percent_mito'] <= 20, :]; adata = adata[adata.obs['total_counts'] > 500, :]; adata.write('./output/cell_annotation/adata_filtered.h5ad')\""
-    ],
-    "analyze": "The provided command installs required packages and performs quality control filtering on the AnnData object by calculating mitochondrial gene percentages and total counts. Cells passing percent mitochondria less than or equal to 20 percent and total counts greater than 500 are retained. The filtered AnnData object is saved correctly, fulfilling the step 2 QC filtering task requirements.",
+    "shell": [],
+    "analyze": "Task completed successfully all steps performed using scanpy command and python script for normalization and identification of highly variable genes the provided script and shell commands are correct therefore no modifications required",
     "output_filename": [
-        "./output/cell_annotation/adata_filtered.h5ad"
+        "./output/cell_annotation/normalized_dataset.h5ad: Normalized and HVG-selected single-cell RNA-seq dataset"
     ],
     "stats": true
 }

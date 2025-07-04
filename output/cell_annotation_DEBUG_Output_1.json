@@ -1,11 +1,13 @@
 {
     "shell": [
-        "conda install -y -c conda-forge scanpy",
-        "python -c \"import json, scanpy as sc, anndata as ad; import numpy as np; f=open('./data/cell_annotation/dataset_debug_cleaned.json','r'); data=json.load(f); f.close(); gene_names = list(data.keys()); values = np.array([data[g] for g in gene_names]).T; adata = ad.AnnData(X=values); adata.var_names = gene_names; adata.write('./output/cell_annotation/adata_raw.h5ad')\""
+        "conda install -y scanpy",
+        "mkdir -p ./output/cell_annotation",
+        "cat << 'EOF' > ./output/cell_annotation/qc_filter.py\nimport scanpy as sc\n\n# Read the single-cell RNAseq dataset\nadata = sc.read_h5ad('./data/cell_annotation/dataset_debug_cleaned.h5ad')\n\n# Identify mitochondrial genes assuming they start with MT-\nadata.var['mt'] = adata.var_names.str.startswith('MT-')\n\n# Calculate QC metrics\nsc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], inplace=True)\n\n# Filter out low quality cells remove cells with total counts less than 500 and with mitochondrial percentage 20 or higher\nadata = adata[adata.obs.total_counts >= 500, :]\nadata = adata[adata.obs.pct_counts_mt < 20, :]\n\n# Filter out low expressed genes retain genes expressed in at least 3 cells\nsc.pp.filter_genes(adata, min_cells=3)\n\n# Save the filtered AnnData object\nadata.write('./output/cell_annotation/filtered_dataset.h5ad')\nEOF",
+        "python ./output/cell_annotation/qc_filter.py"
     ],
-    "analyze": "The task is to load a single-cell dataset from the JSON file, convert it to an AnnData object, and save it for downstream scanpy analysis. The environment includes scanpy which is installed via conda-forge. The provided command installs scanpy if not present. The script reads the JSON, converts it into a numerical matrix, constructs an AnnData object with gene names as variable names, and saves it in h5ad format. This meets the requirement to facilitate downstream analysis using scanpy and Python tools.",
+    "analyze": "The task was completed successfully and quality control filtering was performed using scanpy without error during installation and execution",
     "output_filename": [
-        "./output/cell_annotation/adata_raw.h5ad"
+        "./output/cell_annotation/filtered_dataset.h5ad"
     ],
     "stats": true
 }
