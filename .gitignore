@@ -4,6 +4,13 @@ dhroma_db/
 # Ignore data directory
 data/
 
+# Large h5ad files
+output/cell_annotation/normalized_dataset.h5ad
+output/cell_annotation/filtered_dataset.h5ad
+output/cell_annotation/clusters_annotated.h5ad
+# Ignore all h5ad files in output directory (optional, if you want to ignore all large h5ad files)
+output/**/*.h5ad
+
 # Python bytecode
 __pycache__/
 *.py[cod]
