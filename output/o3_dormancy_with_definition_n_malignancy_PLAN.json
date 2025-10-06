@@ -1,0 +1,59 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Load the single-cell dataset using Scanpy. In this step, we will import the h5ad file, perform quality control, and prepare the data for downstream analysis. This involves reading the file and checking for any quality issues or missing information.",
+            "input_filename": [
+                "/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/biomaster/output/cell_annotation_o3mini/malignant_classification.h5ad: A single-cell RNA-seq breast cancer dataset containing gene expression profiles with cell barcodes, gene names, and malignancy classifications."
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/loaded_data.h5ad: Loaded and pre-processed single-cell dataset"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Subset the dataset to retain only malignant cells. This step uses the malignancy classification already present in the dataset to filter out non-malignant cells. The resulting dataset will include only malignant cells for further classification into cell-cycle states.",
+            "input_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/loaded_data.h5ad: Loaded and pre-processed single-cell dataset"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/malignant_cells.h5ad: Single-cell dataset containing only malignant cells"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Compute cell cycle scores for the malignant cells. This step involves using pre-defined cell cycle gene sets to calculate scores that indicate the proliferation status of each cell. These scores will help distinguish between active proliferating cells and cells in a quiescent or slow-cycling state.",
+            "input_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/malignant_cells.h5ad: Single-cell dataset containing only malignant cells"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/cell_cycle_scored_malignant.h5ad: Malignant cells with computed cell cycle scores"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Cluster malignant cells based on the computed cell cycle scores and overall gene expression profiles. In this step, we will use clustering analysis to classify malignant cells into 'quiescent', 'proliferating', or 'slow-cycling' groups. The clustering outputs will be manually curated by comparing the clusters with known cell cycle marker gene expressions.",
+            "input_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/cell_cycle_scored_malignant.h5ad: Malignant cells with computed cell cycle scores"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/classified_malignant_cells.h5ad: Malignant cells classified into quiescent, proliferating, or slow-cycling states"
+            ],
+            "tools": "Scanpy, Single-cell perform clustering analysis"
+        },
+        {
+            "step_number": 5,
+            "description": "Generate the final classification report summarizing the cell counts and classification results. This report will enumerate the number of malignant cells in each category (quiescent, proliferating, slow-cycling) and include key marker gene expressions supporting the classification decision.",
+            "input_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/classified_malignant_cells.h5ad: Malignant cells classified into quiescent, proliferating, or slow-cycling states"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_definition_n_malignancy/final_classification_report.txt: Report detailing classification results and cell counts for each category"
+            ],
+            "tools": "Single cell full-process analysis with top marker genes"
+        }
+    ]
+}

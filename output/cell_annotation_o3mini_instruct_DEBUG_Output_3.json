@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "cat << 'EOF' > ./output/cell_annotation_o3mini_instruct/normalize_hvg.py\nimport scanpy as sc\n\n# Read the QC-filtered AnnData object\nadata = sc.read(\"./output/cell_annotation_o3mini_instruct/qc_filtered_dataset.h5ad\")\n\n# Normalize the total counts per cell to 1e4\nsc.pp.normalize_total(adata, target_sum=1e4)\n\n# Logarithmize the data\nsc.pp.log1p(adata)\n\n# Identify highly variable genes using default parameters\nsc.pp.highly_variable_genes(adata)\n\n# Subset the AnnData object to keep only highly variable genes\nadata = adata[:, adata.var.highly_variable]\n\n# Save the normalized AnnData object with selected highly variable genes\nadata.write(\"./output/cell_annotation_o3mini_instruct/normalized_hvg_dataset.h5ad\")\nEOF",
+        "python ./output/cell_annotation_o3mini_instruct/normalize_hvg.py"
+    ],
+    "analyze": "The step executed successfully with no errors encountered during package installation and script execution, the file was correctly generated and processed, the commands and file paths satisfy the requirements",
+    "output_filename": [
+        "./output/cell_annotation_o3mini_instruct/normalized_hvg_dataset.h5ad: Normalized AnnData object with selected highly variable genes"
+    ],
+    "stats": true
+}

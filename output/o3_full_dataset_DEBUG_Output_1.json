@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "mkdir -p ./output/o3_full_dataset",
+        "cat << 'EOF' > ./output/o3_full_dataset/scanpy_init.py\nimport scanpy as sc\n\n# Load the two single-cell RNAseq datasets\nadata1 = sc.read_h5ad('/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/remove_label/dataset_restricted.h5ad')\nadata2 = sc.read_h5ad('./data/cell_annotation/dataset_debug_restricted.h5ad')\n\n# Concatenate the two AnnData objects along the observations\nadata = adata1.concatenate(adata2)\n\n# Write the initialized AnnData object to output\nadata.write('./output/o3_full_dataset/initialized_dataset.h5ad')\nEOF",
+        "python ./output/o3_full_dataset/scanpy_init.py"
+    ],
+    "analyze": "task completed successfully, scanpy script executed properly, annData object created and saved in output directory",
+    "output_filename": [
+        "./output/o3_full_dataset/initialized_dataset.h5ad"
+    ],
+    "stats": true
+}

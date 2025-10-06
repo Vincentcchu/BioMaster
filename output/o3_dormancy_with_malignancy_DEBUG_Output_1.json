@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "mkdir -p ./output/o3_dormancy_with_malignancy",
+        "conda install -y scanpy",
+        "echo -e \"import scanpy as sc\\nadata = sc.read_h5ad('/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/remove_label/dataset_restricted_with_labels.h5ad')\\nadata.write('./output/o3_dormancy_with_malignancy/adata_initial.h5ad')\" > ./output/o3_dormancy_with_malignancy/read_adata.py",
+        "python ./output/o3_dormancy_with_malignancy/read_adata.py"
+    ],
+    "analyze": "newline escapes handled properly, script file created and executed successfully, adata object written to output file",
+    "output_filename": [
+        "./output/o3_dormancy_with_malignancy/adata_initial.h5ad"
+    ],
+    "stats": true
+}

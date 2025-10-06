@@ -1,0 +1,23 @@
+=== Single-cell RNA-seq Dataset Exploration ===
+
+Dataset dimensions: 1000 cells × 33541 genes
+
+=== Available Annotations ===
+
+No cell annotations available.
+
+Gene annotations (adata.var):
+
+No gene annotations available.
+
+=== Available Data Layers ===
+
+No additional layers available (only .X matrix).
+
+=== Dimensionality Reductions ===
+
+No dimensionality reductions available.
+
+=== Analysis Results ===
+
+No analysis results available.

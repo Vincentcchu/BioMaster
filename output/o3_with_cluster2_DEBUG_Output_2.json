@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "cat << 'EOF' > ./output/o3_with_cluster2/qc_filtering.py\nimport scanpy as sc\n\n# Read the initial AnnData object\nadata = sc.read_h5ad(\"./output/o3_with_cluster2/initial_adata.h5ad\")\n\n# Identify mitochondrial genes assuming they start with MT-\nadata.var[\"mt\"] = adata.var_names.str.startswith(\"MT-\")\n\n# Calculate QC metrics\nsc.pp.calculate_qc_metrics(adata, qc_vars=[\"mt\"], percent_top=None, log1p=False, inplace=True)\n\n# Filter cells: keep cells with less than 20 percent mitochondrial counts, at least 550 total UMIs, and at least 200 detected genes\nadata = adata[adata.obs.pct_counts_mt < 20, :]\nsc.pp.filter_cells(adata, min_counts=550)\nsc.pp.filter_cells(adata, min_genes=200)\n\n# Save the filtered AnnData object\nadata.write(\"./output/o3_with_cluster2/filtered_adata.h5ad\")\nEOF",
+        "python ./output/o3_with_cluster2/qc_filtering.py"
+    ],
+    "analyze": "QC filtering script was generated and executed successfully, the filtering criteria were applied based on mitochondrial gene percentage, total UMIs and detected genes, and the filtered dataset was saved correctly",
+    "output_filename": [
+        "./output/o3_with_cluster2/filtered_adata.h5ad"
+    ],
+    "stats": true
+}

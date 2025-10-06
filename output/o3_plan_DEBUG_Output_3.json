@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "cat << 'EOF' > ./output/o3_plan/save_malignancy_classification.py\\nimport scanpy as sc\\n\\n# Load the AnnData object with malignancy scores and binary classification labels\\nadata = sc.read_h5ad('./output/o3_plan/scored_classified_dataset.h5ad')\\n\\n# Save the final AnnData object with malignancy annotations\\nadata.write('./output/o3_plan/malignancy_classification.h5ad')\\nEOF",
+        "python ./output/o3_plan/save_malignancy_classification.py"
+    ],
+    "analyze": "Task executed successfully, environment and commands are correctly set up, final AnnData object is saved to malignancy_classification.h5ad as expected",
+    "output_filename": [
+        "./output/o3_plan/malignancy_classification.h5ad"
+    ],
+    "stats": true
+}

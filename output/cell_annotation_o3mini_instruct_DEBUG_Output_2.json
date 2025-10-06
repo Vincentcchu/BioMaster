@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "cat << 'EOF' > ./output/cell_annotation_o3mini_instruct/qc_filter.py\nimport scanpy as sc\n\n# Read the initialized AnnData object containing raw gene expression matrix and metadata\nadata = sc.read_h5ad('./output/cell_annotation_o3mini_instruct/initialized_dataset.h5ad')\n\n# Identify mitochondrial genes by checking if gene names start with MT- and save as a new column in adata.var\nadata.var[\"mt\"] = adata.var_names.str.startswith(\"MT-\")\n\n# Calculate QC metrics using the newly created mt indicator\nsc.pp.calculate_qc_metrics(adata, qc_vars=[\"mt\"], percent_top=None, log1p=False, inplace=True)\n\n# Filter cells: mitochondrial gene percentage below 20, total UMIs at least 500, and number of detected genes at least 200\nadata = adata[(adata.obs.pct_counts_mt < 20) & (adata.obs.total_counts >= 500) & (adata.obs.n_genes_by_counts >= 200)]\n\n# Save the quality-controlled AnnData object\nadata.write('./output/cell_annotation_o3mini_instruct/qc_filtered_dataset.h5ad')\nEOF",
+        "python ./output/cell_annotation_o3mini_instruct/qc_filter.py"
+    ],
+    "analyze": "Task completed successfully the qc filter script was created and executed correctly the filtering thresholds for mitochondrial percentage total umis and detected genes are appropriate and no error was encountered",
+    "output_filename": [
+        "./output/cell_annotation_o3mini_instruct/qc_filtered_dataset.h5ad"
+    ],
+    "stats": true
+}

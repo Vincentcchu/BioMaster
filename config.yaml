@@ -1,0 +1,58 @@
+# BioMaster settings
+    # support main model:
+    # o3-mini, o1, gpt-4o, o3-mini-2025-01-31, o1-2024-12-17
+    # claude-3-7-sonnet-thinking, claude-3-7-sonnet-20250219, claude-3-5-sonnet-20241022
+    # DeepSeek-V3, Deepseek-R1
+    # Qwen/QWQ-32B 
+    # LLAMA3-70B
+    # All other models can be tried, but it is suggested that if the main model chooses a better model, 
+    # the best model tested at present is o3-mini-2025-01-31
+
+    # support tool model:
+    # All LLMS can be tried, and you can choose some small models here.
+
+    # support emmbedding model
+    # text-embedding-004,
+    # text-embedding-3-large, text-embedding-3-small,
+    # text-embedding-ada-002
+    # BAAI/bge-m3
+
+    # suggest base url:
+    # https://api.bltcy.ai/v1
+    # https://gpt-api.hkust-gz.edu.cn/v1
+    # https://dashscope.aliyuncs.com/compatible-mode/v1
+    # https://api.openai.com/v1
+    # https://api.siliconflow.cn/v1
+    # https://sg.uiuiapi.com/v1
+api:
+  main:
+    key: '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'
+    base_url: 'https://api.openai.com/v1/'
+  embedding:
+    key: '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'
+    base_url: 'https://api.openai.com/v1/'
+  # Ollama settings
+  ollama:
+    enabled: false
+    base_url: 'http://localhost:11434'
+
+
+# model settings
+models:
+  main: "o3-mini-2025-01-31" # switch to the reasoning moels like 03 04 o3-mini-2025-01-31
+  tool: "o3-mini-2025-01-31"
+  embedding: "text-embedding-3-large"
+
+
+# Biomaster settings
+biomaster:
+  executor: true
+  id: 'o3_with_cluster'
+  generate_plan: true
+  use_ollama: false
+
+# datalist and goal
+data:
+  files:
+    - '/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/remove_label/dataset_restricted_with_cluster.h5ad: A unannotated single-cell RNA-seq breast cancer dataset containing gene expression profiles with cell barcodes, gene names, and cell clustering information.'
+  goal: 'classify each cell as malignant or non-malignant and save the output to a h5ad file'

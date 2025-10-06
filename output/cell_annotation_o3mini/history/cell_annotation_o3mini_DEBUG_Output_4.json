@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y -c conda-forge scanpy pandas",
+        "cat << 'EOF' > ./output/cell_annotation/marker_gene_identification.py\nimport scanpy as sc\nimport pandas as pd\n\n# Read the AnnData object with cluster labels and dimensionality reduction results\nadata = sc.read_h5ad(\"./output/cell_annotation/clusters_annotated.h5ad\")\n\n# Perform differential expression analysis using t-test between clusters (assuming cluster labels are stored in 'leiden')\nsc.tl.rank_genes_groups(adata, groupby=\"leiden\", method=\"t-test\", n_genes=adata.shape[1])\n\n# Extract marker genes for each cluster and concatenate the results\ndf_list = []\nfor group in adata.obs[\"leiden\"].cat.categories:\n    df = sc.get.rank_genes_groups_df(adata, group=group)\n    df[\"cluster\"] = group\n    df_list.append(df)\n\nmarkers_df = pd.concat(df_list, ignore_index=True)\n\n# Rename columns to match desired output names\nmarkers_df.rename(columns={\"logfoldchanges\": \"logFC\", \"pvals_adj\": \"adj_pvals\"}, inplace=True)\n\n# Filter marker genes: adjusted p-value < 0.05 and logFC > 1\nfiltered_markers = markers_df[(markers_df[\"adj_pvals\"] < 0.05) & (markers_df[\"logFC\"] > 1)]\n\n# Save the differential expression marker gene list to CSV\nfiltered_markers.to_csv(\"./output/cell_annotation/cluster_markers.csv\", index=False)\nEOF",
+        "python ./output/cell_annotation/marker_gene_identification.py"
+    ],
+    "analyze": "The task was executed successfully without errors using scanpy and pandas for differential expression analysis Marker gene identification script was created and executed properly Relative file paths are correct and the marker gene list was generated as expected",
+    "output_filename": [
+        "./output/cell_annotation/cluster_markers.csv: Differential expression marker gene list for clusters"
+    ],
+    "stats": true
+}

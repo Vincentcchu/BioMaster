@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "mkdir -p ./output/o3_with_cluster2",
+        "conda install -y scanpy",
+        "cat << 'EOF' > ./output/o3_with_cluster2/load_adata.py\nimport scanpy as sc\n\n# Read the single-cell RNA-seq dataset from the provided .h5ad file\nadata = sc.read_h5ad(\"/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/remove_label/dataset_restricted_with_cluster.h5ad\")\n\n# Save the AnnData object to the output file\nadata.write(\"./output/o3_with_cluster2/initial_adata.h5ad\")\nEOF",
+        "python ./output/o3_with_cluster2/load_adata.py"
+    ],
+    "analyze": "The task completed successfully all packages were installed and scanpy correctly loaded the h5ad file and generated the initial ann data object in the specified output directory",
+    "output_filename": [
+        "./output/o3_with_cluster2/initial_adata.h5ad"
+    ],
+    "stats": true
+}

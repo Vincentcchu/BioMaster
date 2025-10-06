@@ -1,0 +1,71 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Load the single-cell RNA-seq dataset using Scanpy. This step reads the .h5ad file to create an AnnData object that contains the raw gene expression matrix and metadata. This initialized object will serve as the starting point for subsequent quality control and analysis.",
+            "input_filename": [
+                "./data/cell_annotation/dataset_debug_restricted.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
+            ],
+            "output_filename": [
+                "./output/cell_annotation_2/initialized_dataset.h5ad: AnnData object containing raw gene expression data"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Perform quality control (QC) to filter out low-quality cells. Using Scanpy, filter cells based on criteria such as mitochondrial gene percentage, total UMIs, and number of detected genes. The resulting dataset will include only high-quality cells for downstream analysis.",
+            "input_filename": [
+                "./output/cell_annotation_2/initialized_dataset.h5ad: AnnData object containing raw gene expression data"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_2/filtered_dataset.h5ad: AnnData object containing filtered high-quality cells"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Normalize the filtered dataset and identify highly variable genes (HVGs). This involves normalizing total counts per cell, applying log-transformation, and selecting HVGs to capture biological variations. The processed data will facilitate reliable dimensionality reduction and clustering.",
+            "input_filename": [
+                "./output/cell_annotation_2/filtered_dataset.h5ad: AnnData object containing filtered high-quality cells"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_2/normalized_dataset.h5ad: Normalized AnnData object annotated with highly variable genes"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Conduct dimensionality reduction and clustering analysis. Using Scanpy, perform PCA for initial dimensionality reduction, construct a KNN graph for neighborhood estimation, and apply the Leiden clustering algorithm. Generate UMAP visualization to explore cell clusters. This step segregates cells into clusters which could potentially include malignant and non-malignant populations.",
+            "input_filename": [
+                "./output/cell_annotation_2/normalized_dataset.h5ad: Normalized AnnData object annotated with highly variable genes"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_2/clusters_dataset.h5ad: AnnData object with computed PCA, neighborhood graph, Leiden clusters, and UMAP coordinates",
+                "./output/cell_annotation_2/umap_clusters.png: UMAP plot displaying cell clusters"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 5,
+            "description": "Annotate and classify cells based on their expression profiles. Identify marker genes for each cluster and use known malignant cell markers to distinguish malignant from non-malignant cells. Leverage Scanpy for differential expression analysis between clusters and manual curation or auxiliary tools (e.g., cell type identification guidelines) to assign labels. The output is an annotated AnnData object with a new column defining cell type classification as 'malignant' or 'non_malignant'.",
+            "input_filename": [
+                "./output/cell_annotation_2/clusters_dataset.h5ad: AnnData object with computed clusters and UMAP coordinates"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_2/annotated_cells.h5ad: AnnData object with cell type annotations indicating malignant and non-malignant cells"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 6,
+            "description": "Visualize the final cell classification. Generate UMAP plots with cells colored based on their assigned labels (malignant vs non-malignant) to facilitate interpretation and validation of the classification results. This step confirms the accuracy of the annotation and enables further biological interpretation.",
+            "input_filename": [
+                "./output/cell_annotation_2/annotated_cells.h5ad: AnnData object with cell type annotations"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_2/umap_annotation.png: UMAP plot with cells classified as malignant or non-malignant"
+            ],
+            "tools": "Scanpy"
+        }
+    ]
+}

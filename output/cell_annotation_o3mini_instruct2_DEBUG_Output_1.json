@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "mkdir -p ./output/cell_annotation_o3mini_instruct2",
+        "cat << 'EOF' > ./output/cell_annotation_o3mini_instruct2/run_scanpy_qc.py\nimport scanpy as sc\n\n# Read the single-cell RNA-seq dataset\nadata = sc.read_h5ad(\"./data/cell_annotation/dataset_debug_restricted.h5ad\")\n\n# Identify mitochondrial genes assuming gene names starting with MT-\nadata.var['mt'] = adata.var_names.str.upper().str.startswith('MT-')\n\n# Compute QC metrics including percentage of mitochondrial counts\nsc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)\n\n# Filter out low quality cells based on total counts and mitochondrial percentage\nadata = adata[adata.obs['total_counts'] >= 500, :]\nadata = adata[adata.obs['pct_counts_mt'] < 20, :]\n\n# Save the filtered AnnData object\nadata.write(\"./output/cell_annotation_o3mini_instruct2/filtered_dataset.h5ad\")\nEOF",
+        "python ./output/cell_annotation_o3mini_instruct2/run_scanpy_qc.py"
+    ],
+    "analyze": "The task was completed successfully using scanpy to load dataset and perform quality control based on mitochondrial counts and total umi counts resulting in a filtered dataset",
+    "output_filename": [
+        "./output/cell_annotation_o3mini_instruct2/filtered_dataset.h5ad"
+    ],
+    "stats": true
+}

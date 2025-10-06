@@ -1,0 +1,68 @@
+# BioMaster settings
+    # support main model:
+    # o3-mini, o1, gpt-4o, o3-mini-2025-01-31, o1-2024-12-17
+    # claude-3-7-sonnet-thinking, claude-3-7-sonnet-20250219, claude-3-5-sonnet-20241022
+    # DeepSeek-V3, Deepseek-R1
+    # Qwen/QWQ-32B 
+    # LLAMA3-70B
+    # All other models can be tried, but it is suggested that if the main model chooses a better model, 
+    # the best model tested at present is o3-mini-2025-01-31
+
+    # support tool model:
+    # All LLMS can be tried, and you can choose some small models here.
+
+    # support emmbedding model
+    # text-embedding-004,
+    # text-embedding-3-large, text-embedding-3-small,
+    # text-embedding-ada-002
+    # BAAI/bge-m3
+
+    # suggest base url:
+    # https://api.bltcy.ai/v1
+    # https://gpt-api.hkust-gz.edu.cn/v1
+    # https://dashscope.aliyuncs.com/compatible-mode/v1
+    # https://api.openai.com/v1
+    # https://api.siliconflow.cn/v1
+    # https://sg.uiuiapi.com/v1
+api:
+  main:
+    key: 'YOUR_API_KEY_HERE'
+    base_url: 'https://api.openai.com/v1/'
+  embedding:
+    key: 'YOUR_API_KEY_HERE'
+    base_url: 'https://api.openai.com/v1/'
+  # Ollama settings
+  ollama:
+    enabled: false
+    base_url: 'http://localhost:11434'
+
+
+# model settings
+model:
+  main:
+    model_name: "gpt-4o"
+    temperature: 0.5
+    system_prompt: |-
+      You are a senior computational biologist with expertise in genomics, gene expression analysis, cell type identification, and molecular biology. Your role is to assist with cell type identification and other genomic analysis tasks.
+      Your response should be clear, accurate, and based on current scientific understanding. Consider the possibility of novel or hybrid cell types, and express appropriate uncertainty when the data is ambiguous. For code, provide readable, well-documented Python code using standard libraries in computational biology like scanpy, numpy, pandas, and matplotlib.
+    top_p: 0.9
+    stop: []
+    max_tokens: 3000
+  tool:
+    model_name: "gpt-3.5-turbo-1106"
+    temperature: 0.5
+    system_prompt: |-
+      You are a senior computational biologist expert in genomics, and are very good at using research tools for cell type identification in single-cell RNA-seq data. You are provided with information about genes associated with specific cell types, and your task is to analyze this information to help identify the most likely cell type for a given expression profile.
+      For ranking candidates, first rank by category priority: Major Cell Types > Subtypes > Specific Subtypes, then by match quality within each category.
+      Always keep in mind the hierarchical relationship between cell types.
+    top_p: 0.9
+    stop: []
+    max_tokens: 3000
+  embedding:
+    model_name: "text-embedding-3-small"
+
+
+# service settings
+max_tokens_limit: 128000
+
+# this project settings

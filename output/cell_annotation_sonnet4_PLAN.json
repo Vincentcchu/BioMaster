@@ -1,0 +1,81 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Load and examine the single-cell RNA-seq dataset to understand its structure, including the number of cells, genes, and any existing metadata. This step involves reading the h5ad file and performing basic quality control checks to assess data quality, identify potential batch effects, and understand the distribution of gene expression across cells.",
+            "input_filename": [
+                "./data/cell_annotation/dataset_debug_restricted.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet4/loaded_dataset.h5ad: Loaded single-cell RNA-seq dataset with basic quality metrics"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Perform data preprocessing including filtering of low-quality cells and genes, normalization of gene expression data, and log transformation. This step also includes the identification of highly variable genes that will be used for downstream analysis. Quality control metrics such as mitochondrial gene expression percentage and total gene counts per cell will be calculated and used for filtering.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet4/loaded_dataset.h5ad: Loaded single-cell RNA-seq dataset with basic quality metrics"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet4/preprocessed_dataset.h5ad: Preprocessed and normalized single-cell RNA-seq dataset"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Perform dimensionality reduction using Principal Component Analysis (PCA) to identify the major sources of variation in the dataset. This step will help reduce the computational complexity for downstream clustering and visualization while retaining the most important biological signals in the data.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet4/preprocessed_dataset.h5ad: Preprocessed and normalized single-cell RNA-seq dataset"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet4/pca_dataset.h5ad: Single-cell dataset with PCA dimensionality reduction"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Construct a neighborhood graph and perform clustering analysis to identify distinct cell populations within the dataset. This step uses methods like Leiden clustering to group cells with similar expression profiles, which will form the basis for subsequent malignancy classification.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet4/pca_dataset.h5ad: Single-cell dataset with PCA dimensionality reduction"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet4/clustered_dataset.h5ad: Single-cell dataset with identified cell clusters"
+            ],
+            "tools": "Single-cell perform clustering analysis"
+        },
+        {
+            "step_number": 5,
+            "description": "Identify marker genes for each cluster to characterize the biological identity of different cell populations. This step will help distinguish between normal and potentially malignant cell types by identifying genes that are specifically expressed in certain clusters.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet4/clustered_dataset.h5ad: Single-cell dataset with identified cell clusters"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet4/marker_genes_results.h5ad: Single-cell dataset with identified marker genes for each cluster"
+            ],
+            "tools": "single-cell data marker gene identification"
+        },
+        {
+            "step_number": 6,
+            "description": "Perform comprehensive single-cell analysis to identify top marker genes and refine cell type annotations. This step will provide detailed characterization of each cell cluster and help identify potential malignant cell populations based on known cancer-associated gene expression patterns.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet4/marker_genes_results.h5ad: Single-cell dataset with identified marker genes for each cluster"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet4/comprehensive_analysis_results.h5ad: Comprehensive single-cell analysis results with top marker genes"
+            ],
+            "tools": "Single cell full-process analysis with top marker genes"
+        },
+        {
+            "step_number": 7,
+            "description": "Generate final malignancy classification results by analyzing the expression patterns of cancer-associated genes, oncogenes, and tumor suppressor genes across the identified cell clusters. This step will classify each cell and cluster as malignant or non-malignant based on established cancer biomarkers and expression signatures.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet4/comprehensive_analysis_results.h5ad: Comprehensive single-cell analysis results with top marker genes"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet4/malignancy_classification_results.txt: Final malignancy classification results for each cell and cluster"
+            ],
+            "tools": "Scanpy"
+        }
+    ]
+}

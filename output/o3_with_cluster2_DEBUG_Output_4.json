@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "conda install -y scanpy matplotlib",
+        "cat << 'EOF' > ./output/o3_with_cluster2/cluster_analysis.py\nimport scanpy as sc\nimport matplotlib.pyplot as plt\n\n# Load the normalized AnnData object with highly variable genes\nadata = sc.read_h5ad(\"./output/o3_with_cluster2/normalized_adata.h5ad\")\n\n# Perform PCA for dimensionality reduction\nsc.tl.pca(adata, svd_solver=\"arpack\")\n\n# Compute the neighborhood graph\nsc.pp.neighbors(adata)\n\n# Apply the Leiden algorithm for clustering\nsc.tl.leiden(adata)\n\n# Generate UMAP visualization\nsc.tl.umap(adata)\n\n# Save the AnnData object with clustering annotations\nadata.write(\"./output/o3_with_cluster2/clustered_adata.h5ad\")\n\n# Plot UMAP with clusters and save the figure\nsc.pl.umap(adata, color=\"leiden\", show=False)\nplt.savefig(\"./output/o3_with_cluster2/umap.png\")\nEOF",
+        "python ./output/o3_with_cluster2/cluster_analysis.py"
+    ],
+    "analyze": "Commands executed correctly all necessary dependencies installed and the clustering analysis step using scanpy was successfully programmed dimensionality reduction clustering and umap visualization performed",
+    "output_filename": [
+        "./output/o3_with_cluster2/clustered_adata.h5ad: AnnData object with clustering annotations",
+        "./output/o3_with_cluster2/umap.png: UMAP visualization plot of cell clusters"
+    ],
+    "stats": true
+}

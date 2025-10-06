@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "mkdir -p ./output/cell_annotation_o3mini_instruct3",
+        "cat << 'EOF' > ./output/cell_annotation_o3mini_instruct3/initialize_data.py\nimport scanpy as sc\n\n# Read the single-cell RNA-seq dataset and initialize the AnnData object\nadata = sc.read_h5ad('./data/cell_annotation/dataset_debug_restricted.h5ad')\n\n# Save the initialized AnnData object for downstream analyses\nadata.write('./output/cell_annotation_o3mini_instruct3/initialized_data.h5ad')\nEOF",
+        "python ./output/cell_annotation_o3mini_instruct3/initialize_data.py"
+    ],
+    "analyze": "The process executed correctly without errors using the python script to read the h5ad file and generate an initialized AnnData object which is saved for downstream analyses",
+    "output_filename": [
+        "./output/cell_annotation_o3mini_instruct3/initialized_data.h5ad"
+    ],
+    "stats": true
+}

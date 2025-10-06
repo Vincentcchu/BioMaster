@@ -1,0 +1,60 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Perform quality control (QC) filtering on the single-cell RNA-seq dataset using Scanpy. In this step, low quality cells (e.g., cells with high mitochondrial gene percentage or low UMI counts) and low expressed genes are filtered out to ensure that subsequent analyses are based on high-quality data. The filtered AnnData object will be output for further processing.",
+            "input_filename": [
+                "./data/cell_annotation/dataset_debug_cleaned.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
+            ],
+            "output_filename": [
+                "./output/cell_annotation/filtered_dataset.h5ad: QC-filtered single-cell RNA-seq dataset"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Normalize the QC-filtered data and identify highly variable genes (HVGs) using Scanpy. This includes total count normalization, log transformation, and the detection of HVGs that will be used for downstream clustering and dimensionality reduction.",
+            "input_filename": [
+                "./output/cell_annotation/filtered_dataset.h5ad: QC-filtered single-cell RNA-seq dataset"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/normalized_dataset.h5ad: Normalized and HVG-selected single-cell RNA-seq dataset"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Perform dimensionality reduction and clustering analysis using Scanpy to explore the transcriptional landscape of the cells. This step includes principal component analysis (PCA), constructing a nearest-neighbors graph, applying Leiden clustering, and generating UMAP or t-SNE visualizations. The resulting clustering information will be used to distinguish potential malignant from non-malignant cells.",
+            "input_filename": [
+                "./output/cell_annotation/normalized_dataset.h5ad: Normalized and HVG-selected single-cell RNA-seq dataset"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/clusters_annotated.h5ad: AnnData object with dimensionality reduction results and cluster labels"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Identify marker genes for each cluster via differential expression analysis using Scanpy. By comparing gene expression between clusters, this step will help to reveal marker genes indicative of malignant transformation. The output will be a table (CSV) listing marker genes with associated statistics, which will guide the classification of cells.",
+            "input_filename": [
+                "./output/cell_annotation/clusters_annotated.h5ad: AnnData object with dimensionality reduction results and cluster labels"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/cluster_markers.csv: Differential expression marker gene list for clusters"
+            ],
+            "tools": "Scanpy, pandas"
+        },
+        {
+            "step_number": 5,
+            "description": "Classify cells as malignant or non-malignant by annotating the cell types based on the identified marker genes and known malignant markers. Using Scanpy and celltypist (with assistance from pandas for data handling), this step assigns a new cell label (e.g., 'malignant' or 'non-malignant') in the AnnData object based on the expression profiles of key marker genes.",
+            "input_filename": [
+                "./output/cell_annotation/clusters_annotated.h5ad: AnnData object with dimensionality reduction results and cluster labels",
+                "./output/cell_annotation/cluster_markers.csv: Differential expression marker gene list for clusters"
+            ],
+            "output_filename": [
+                "./output/cell_annotation/malignant_classification.h5ad: Annotated single-cell dataset with malignant/non-malignant classification"
+            ],
+            "tools": "Scanpy, celltypist, pandas"
+        }
+    ]
+}

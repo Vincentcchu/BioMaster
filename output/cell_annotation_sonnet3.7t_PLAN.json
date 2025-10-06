@@ -1,0 +1,104 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Load the single-cell RNA-seq dataset and explore its structure. This step involves reading the h5ad file containing gene expression profiles, cell barcodes, and gene names. We will examine the dataset's attributes, including the number of cells, genes, and any existing annotations. This initial exploration will help us understand the dataset's composition and guide subsequent preprocessing and analysis steps.",
+            "input_filename": [
+                "./data/cell_annotation/dataset_debug_restricted.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/data_exploration_summary.txt: Summary of dataset structure, dimensions, and existing annotations"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Preprocess the single-cell RNA-seq data to prepare it for classification. This includes filtering cells based on quality control metrics (such as number of genes detected, mitochondrial gene percentage), normalizing gene expression values to account for sequencing depth differences, and log-transforming the data. These preprocessing steps are crucial for reducing technical variability and focusing on biologically relevant signals.",
+            "input_filename": [
+                "./data/cell_annotation/dataset_debug_restricted.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/preprocessed_data.h5ad: Quality-controlled and normalized single-cell RNA-seq data"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Perform dimensionality reduction and clustering to identify cell populations. We will compute principal components of the gene expression data, then use these to create UMAP or t-SNE visualizations. Next, we'll apply clustering algorithms to group cells with similar expression profiles. This step helps identify cell populations and potential malignant vs. non-malignant cell clusters based on their transcriptomic similarities.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet3.7t/preprocessed_data.h5ad: Quality-controlled and normalized single-cell RNA-seq data"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/dimensionality_reduction_clustering.h5ad: Single-cell data with dimensionality reduction and clustering results",
+                "./output/cell_annotation_sonnet3.7t/clustering_visualization.pdf: Visualization of cell clusters in reduced dimensional space"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Identify marker genes for different cell clusters and extract malignancy-associated gene signatures. We will perform differential expression analysis between clusters to find genes that are specifically expressed in each cluster. By comparing these marker genes with known cancer-associated genes, we can identify gene signatures associated with malignancy. These signatures will be critical features for our classification model.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet3.7t/dimensionality_reduction_clustering.h5ad: Single-cell data with dimensionality reduction and clustering results"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/marker_genes.csv: List of marker genes for each cell cluster",
+                "./output/cell_annotation_sonnet3.7t/malignancy_gene_signature.csv: Gene signature associated with malignant phenotype"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 5,
+            "description": "Train a machine learning model to classify cells as malignant or non-malignant. Using the gene expression data and the malignancy-associated gene signatures identified in the previous step, we will train a classification model. This involves feature selection, model training, and parameter tuning. We will evaluate multiple algorithms to find the one with the best performance for this specific task.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet3.7t/dimensionality_reduction_clustering.h5ad: Single-cell data with dimensionality reduction and clustering results",
+                "./output/cell_annotation_sonnet3.7t/malignancy_gene_signature.csv: Gene signature associated with malignant phenotype"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/trained_classification_model.pkl: Trained machine learning model for malignancy classification"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 6,
+            "description": "Apply the trained model to classify all cells in the dataset and evaluate classification performance. We will use the trained model to predict whether each cell is malignant or not. The performance of the classification will be assessed using metrics such as accuracy, precision, recall, and F1-score. We will also visualize the classification results by overlaying the predictions on the UMAP or t-SNE plots from step 3.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet3.7t/dimensionality_reduction_clustering.h5ad: Single-cell data with dimensionality reduction and clustering results",
+                "./output/cell_annotation_sonnet3.7t/trained_classification_model.pkl: Trained machine learning model for malignancy classification"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/cell_malignancy_predictions.csv: Predictions of malignancy status for each cell",
+                "./output/cell_annotation_sonnet3.7t/classification_performance_metrics.txt: Evaluation metrics for the malignancy classification",
+                "./output/cell_annotation_sonnet3.7t/malignancy_visualization.pdf: Visualization of malignant and non-malignant cells in reduced dimensional space"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 7,
+            "description": "Perform spatial analysis of malignant cells (if spatial data is available). This step explores the spatial distribution and interactions of malignant cells with their microenvironment. We will analyze spatial patterns, cell-cell interactions, and neighborhood composition to understand the spatial context of malignancy. This analysis can reveal important insights about tumor microenvironment and malignant cell behavior.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet3.7t/cell_malignancy_predictions.csv: Predictions of malignancy status for each cell",
+                "./output/cell_annotation_sonnet3.7t/dimensionality_reduction_clustering.h5ad: Single-cell data with dimensionality reduction and clustering results"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/spatial_analysis_results.h5ad: Results of spatial analysis of malignant cells",
+                "./output/cell_annotation_sonnet3.7t/spatial_visualization.pdf: Visualization of spatial distribution of malignant cells"
+            ],
+            "tools": "Squidpy"
+        },
+        {
+            "step_number": 8,
+            "description": "Generate a comprehensive report summarizing the malignancy classification results. This final step involves creating a detailed report that includes information about the classification methodology, key malignancy markers identified, classification performance metrics, and visualizations. The report will provide a complete overview of the analysis process and findings regarding cell malignancy status.",
+            "input_filename": [
+                "./output/cell_annotation_sonnet3.7t/cell_malignancy_predictions.csv: Predictions of malignancy status for each cell",
+                "./output/cell_annotation_sonnet3.7t/classification_performance_metrics.txt: Evaluation metrics for the malignancy classification",
+                "./output/cell_annotation_sonnet3.7t/malignancy_visualization.pdf: Visualization of malignant and non-malignant cells in reduced dimensional space",
+                "./output/cell_annotation_sonnet3.7t/marker_genes.csv: List of marker genes for each cell cluster"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_sonnet3.7t/malignancy_classification_report.pdf: Comprehensive report on cell malignancy classification",
+                "./output/cell_annotation_sonnet3.7t/final_annotated_data.h5ad: Final dataset with malignancy annotations for each cell"
+            ],
+            "tools": "Scanpy"
+        }
+    ]
+}

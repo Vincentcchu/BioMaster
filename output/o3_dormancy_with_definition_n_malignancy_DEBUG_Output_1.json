@@ -1,0 +1,15 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "mkdir -p /tmp/o3_dormancy_with_definition_n_malignancy",
+        "mkdir -p ./output/o3_dormancy_with_definition_n_malignancy",
+        "cat << 'EOF' > ./output/o3_dormancy_with_definition_n_malignancy/scanpy_preprocess.py\nimport scanpy as sc\n\n# Read the single-cell RNA-seq dataset\nadata = sc.read_h5ad(\"/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/biomaster/output/cell_annotation_o3mini/malignant_classification.h5ad\")\n\n# Annotate mitochondrial genes assuming gene names starting with MT-\nadata.var[\"mt\"] = adata.var_names.str.startswith(\"MT-\")\n\n# Calculate quality control metrics\nsc.pp.calculate_qc_metrics(adata, qc_vars=[\"mt\"], inplace=True)\n\n# Filter out cells with more than 20 percent mitochondrial counts and with less than 500 total counts\nadata = adata[adata.obs.pct_counts_mt < 20, :]\nadata = adata[adata.obs.total_counts >= 500, :]\n\n# Normalize: scale total counts per cell to 10000 and log-transform\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\n\n# Scale the data to unit variance and zero mean with clipping at 10\nsc.pp.scale(adata, max_value=10)\n\n# Write the processed dataset to a temporary directory with more available space\nadata.write(\"/tmp/o3_dormancy_with_definition_n_malignancy/processed_dataset.h5ad\")\nEOF",
+        "python ./output/o3_dormancy_with_definition_n_malignancy/scanpy_preprocess.py",
+        "mv /tmp/o3_dormancy_with_definition_n_malignancy/processed_dataset.h5ad ./output/o3_dormancy_with_definition_n_malignancy/loaded_data.h5ad"
+    ],
+    "analyze": "The single cell dataset was loaded successfully using scanpy by reading the h5ad file and performing quality control and preprocessing the data The processed dataset was initially written in a temporary directory due to disk quota limitations and then moved to the expected output location The provided shell commands satisfy the requirements",
+    "output_filename": [
+        "./output/o3_dormancy_with_definition_n_malignancy/loaded_data.h5ad"
+    ],
+    "stats": true
+}

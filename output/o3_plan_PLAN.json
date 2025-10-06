@@ -1,0 +1,37 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Data Preparation and Setup: Load the integrated single-cell RNA-seq dataset along with its cell type annotations and perform quality control (QC) using Scanpy. In this step, the dataset will be filtered based on quality metrics (e.g., mitochondrial gene percentage, total UMIs, and number of detected genes) to obtain a high-quality AnnData object. Additionally, the malignancy-related gene signatures (upregulated and downregulated signatures to differentiate malignant from non-malignant cells) will be loaded or defined for subsequent scoring.",
+            "input_filename": [
+                "/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/remove_label/dataset_restricted.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
+            ],
+            "output_filename": [
+                "./output/o3_plan/filtered_dataset.h5ad: Processed AnnData object after QC and cell type annotation standardization"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Signature Scoring and Binary Classification: Compute a malignancy score for each cell using Scanpy's gene scoring functions (e.g., sc.tl.score_genes) by taking the difference between the expression of upregulated and downregulated malignancy gene sets. Following the score computation, perform binary classification by applying a threshold or fitting a Gaussian mixture model on the computed scores to classify each cell as malignant or non-malignant. At this stage, cross-validation with known marker genes or available CNV profiles may be applied to ensure classification robustness.",
+            "input_filename": [
+                "./output/o3_plan/filtered_dataset.h5ad: Processed AnnData object after QC and cell type annotation standardization"
+            ],
+            "output_filename": [
+                "./output/o3_plan/scored_classified_dataset.h5ad: AnnData object with malignancy scores and binary classification labels for each cell"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Results Output and Interpretation: Save the final AnnData object that includes malignancy annotations (malignant vs non-malignant) along with the computed scores into an h5ad file. This output will be used for downstream analyses and visualization.",
+            "input_filename": [
+                "./output/o3_plan/scored_classified_dataset.h5ad: AnnData object with malignancy scores and binary classification labels for each cell"
+            ],
+            "output_filename": [
+                "./output/o3_plan/malignancy_classification.h5ad: Final AnnData object containing cell malignancy classification results"
+            ],
+            "tools": "Scanpy"
+        }
+    ]
+}

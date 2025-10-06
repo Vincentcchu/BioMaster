@@ -1,0 +1,70 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Read the single-cell RNA-seq dataset using Scanpy. This step involves loading the input .h5ad dataset to create an AnnData object containing the raw gene expression matrix. The AnnData object includes cell barcodes, gene names, and associated metadata. This serves as the basis for all subsequent analyses.",
+            "input_filename": [
+                "./data/cell_annotation/dataset_debug_restricted.h5ad: A single-cell RNA-seq dataset containing gene expression profiles with cell barcodes and gene names."
+            ],
+            "output_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_raw.h5ad: AnnData object with raw gene expression profiles"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Perform quality control (QC) to filter out low-quality cells. In this step, cells with high mitochondrial gene percentage (>=20%), low total UMIs (<500) or low number of detected genes are removed to ensure that only high-quality cells are analyzed. The output is a filtered AnnData object containing cleaner data for subsequent normalization and analysis.",
+            "input_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_raw.h5ad: AnnData object with raw gene expression profiles"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_qc.h5ad: AnnData object after quality control filtering"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Normalize the data and identify highly variable genes (HVGs). Normalization is performed using total count normalization followed by log-transformation. Highly variable genes across cells are selected to capture the most informative features for downstream dimensionality reduction and clustering. The output is a normalized AnnData object with identified HVGs.",
+            "input_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_qc.h5ad: AnnData object after quality control filtering"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_norm.h5ad: Normalized AnnData object with highly variable genes marked"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Perform dimensionality reduction and clustering analysis. First, use PCA to reduce the dimensionality of the normalized dataset, followed by constructing a K-nearest neighbor graph and applying the Leiden algorithm for clustering. UMAP or t-SNE visualization is generated to inspect the clusters. The output is an AnnData object with cluster labels appended to meta-data.",
+            "input_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_norm.h5ad: Normalized AnnData object with highly variable genes marked"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_clustered.h5ad: AnnData object annotated with clusters and dimension reduction results"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 5,
+            "description": "Identify marker genes for each cluster and determine the malignant status of clusters. Use differential expression analysis (e.g., Scanpy's rank_genes_groups) to find marker genes that distinguish clusters. Then, based on known malignant cell markers and expression profiles, classify whether a cluster is malignant. Append the malignant classification (e.g., a binary label) to the AnnData object's cell metadata. This step bridges marker gene identification with determination of malignancy using gene expression profiles.",
+            "input_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_clustered.h5ad: AnnData object annotated with clusters and dimension reduction results"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_annotated.h5ad: AnnData object with malignant classification appended to cell metadata"
+            ],
+            "tools": "Scanpy, single-cell data marker gene identification"
+        },
+        {
+            "step_number": 6,
+            "description": "Save the final annotated AnnData object containing malignant classification in h5ad format. The final output file will include gene expression profiles, dimension reduction coordinates, cluster labels, and the malignant status for each cell.",
+            "input_filename": [
+                "./output/cell_annotation_o3mini_instruct1/adata_annotated.h5ad: AnnData object with malignant classification appended to cell metadata"
+            ],
+            "output_filename": [
+                "./output/cell_annotation_o3mini_instruct1/malignant_annotation.h5ad: Annotated single-cell dataset with malignant classification in h5ad format"
+            ],
+            "tools": "Scanpy"
+        }
+    ]
+}

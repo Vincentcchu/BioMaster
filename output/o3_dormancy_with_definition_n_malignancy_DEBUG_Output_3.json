@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "mkdir -p ./output/o3_dormancy_with_definition_n_malignancy",
+        "cat << 'EOF' > ./output/o3_dormancy_with_definition_n_malignancy/compute_cell_cycle_scores.py\nimport scanpy as sc\nimport sys\n\n# Read the malignant cells dataset\nadata = sc.read_h5ad(\"./output/o3_dormancy_with_definition_n_malignancy/malignant_cells.h5ad\")\n\n# If available use gene_symbols column for gene names, otherwise use var_names\nif 'gene_symbols' in adata.var.columns:\n    adata.var_names = adata.var['gene_symbols'].str.upper()\nelse:\n    adata.var_names = adata.var_names.str.upper()\n\n# Define cell cycle gene sets for S phase and G2/M phase and convert them to uppercase\ns_genes = [gene.upper() for gene in [\"MCM5\", \"PCNA\", \"TYMS\", \"FEN1\", \"MCM2\", \"MCM4\", \"RRM1\", \"UNG\", \"GINS2\", \"MCM6\", \"CDCA7\", \"DTL\", \"PRIM1\", \"UHRF1\", \"CHK1\", \"RFC2\", \"RPA3\", \"GMNN\", \"WDR76\", \"SLBP\", \"CCNE2\", \"UBR7\", \"POLD3\", \"MSH2\", \"ATAD2\", \"RAD51AP1\"]]\n\ng2m_genes = [gene.upper() for gene in [\"HMGB2\", \"CDK1\", \"NUSAP1\", \"UBE2C\", \"BIRC5\", \"TPX2\", \"TOP2A\", \"CCNB1\", \"CDC20\", \"TTK\", \"CDC2\"]]\n\n# Filter gene lists to include only those present in the dataset\ns_genes = [gene for gene in s_genes if gene in adata.var_names]\ng2m_genes = [gene for gene in g2m_genes if gene in adata.var_names]\n\n# Exit gracefully if no overlapping cell cycle genes found\nif not s_genes or not g2m_genes:\n    sys.exit(\"No overlapping cell cycle genes found in dataset\")\n\n# Compute cell cycle scores with use_raw false to use processed data and avoid raw data lookup errors\ntry:\n    sc.tl.score_genes_cell_cycle(adata, s_genes=s_genes, g2m_genes=g2m_genes, use_raw=False)\nexcept KeyError as e:\n    sys.exit(\"KeyError in computing cell cycle scores: \" + str(e))\n\n# Save the AnnData object with computed cell cycle scores\nadata.write(\"./output/o3_dormancy_with_definition_n_malignancy/cell_cycle_scored_malignant.h5ad\")\nEOF",
+        "python ./output/o3_dormancy_with_definition_n_malignancy/compute_cell_cycle_scores.py"
+    ],
+    "analyze": "error due to keyerror caused by cell cycle genes missing in dataset index, added check for gene_symbols column and conversion to uppercase, inserted try except block and graceful exit if no overlapping genes found",
+    "output_filename": [
+        "./output/o3_dormancy_with_definition_n_malignancy/cell_cycle_scored_malignant.h5ad"
+    ],
+    "stats": false
+}

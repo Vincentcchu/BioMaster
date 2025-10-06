@@ -1,0 +1,60 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Read the single-cell RNA-seq dataset using Scanpy to generate an AnnData object. This step loads the .h5ad file that contains gene expression profiles and the malignancy classifications for each cell.",
+            "input_filename": [
+                "/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/remove_label/dataset_restricted_with_labels.h5ad: A single-cell RNA-seq breast cancer dataset containing gene expression profiles with cell barcodes, gene names, and malignancy classifications."
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_initial.h5ad: AnnData object after initial data reading"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Perform quality control, normalization, and highly variable gene (HVG) selection using Scanpy. This step ensures the data is suitably preprocessed before further analysis, including filtering low-quality cells, normalizing total counts, log-transforming, and identifying HVGs.",
+            "input_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_initial.h5ad: AnnData object after initial data reading"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_normalized.h5ad: Preprocessed AnnData object with normalized expression and HVG annotation"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Filter the AnnData object to retain only the malignant cells using the malignancy classification present in the metadata. This creates a subset that will be used specifically for sub-classification into quiescent, proliferative, or slow-cycling states.",
+            "input_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_normalized.h5ad: Preprocessed AnnData object with normalized expression and HVG annotation"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_malignant.h5ad: AnnData object containing only malignant cells"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Perform cell cycle scoring on the malignant cells using Scanpy. Utilize known cell cycle marker genes to compute scores (e.g., for S and G2/M phases) and then classify malignant cells based on these scores: high scores can be annotated as 'proliferative', low scores as 'quiescent', and intermediate scores as 'slow-cycling'. This classification assigns a new label to each malignant cell in the AnnData object.",
+            "input_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_malignant.h5ad: AnnData object containing only malignant cells"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_classified.h5ad: Annotated AnnData object with malignant cells classified as quiescent, proliferative, or slow-cycling"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 5,
+            "description": "Generate visualizations and save the final annotated dataset. Compute a UMAP embedding using Scanpy to visualize the distribution of the classified malignant cells and verify the sub-classification. Save both the annotated AnnData object and the UMAP plot for further inspection.",
+            "input_filename": [
+                "./output/o3_dormancy_with_malignancy/adata_classified.h5ad: Annotated AnnData object with malignant cell sub-classification"
+            ],
+            "output_filename": [
+                "./output/o3_dormancy_with_malignancy/annotated_dataset.h5ad: Final annotated AnnData object with cell sub-classification",
+                "./output/o3_dormancy_with_malignancy/UMAP_classification.png: UMAP plot visualizing malignant cell sub-classification"
+            ],
+            "tools": "Scanpy"
+        }
+    ]
+}

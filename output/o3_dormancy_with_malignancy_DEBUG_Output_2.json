@@ -1,0 +1,8 @@
+{
+    "shell": [],
+    "analyze": "The task executed successfully with quality control normalization and hvg selection performed correctly the provided script created the mitochondrial genes column and merged datasets as expected and generated the preprocessed ann data object",
+    "output_filename": [
+        "./output/o3_dormancy_with_malignancy/adata_normalized.h5ad"
+    ],
+    "stats": true
+}

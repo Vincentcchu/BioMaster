@@ -1,0 +1,11 @@
+{
+    "shell": [
+        "conda install -y scanpy celltypist pandas",
+        "python ./output/cell_annotation/malignant_classification.py --dataset ./output/cell_annotation/normalized_dataset.h5ad --clusters ./output/cell_annotation/clusters_annotated.h5ad --markers ./output/cell_annotation/cluster_markers.csv --output ./output/cell_annotation/malignant_classification.h5ad"
+    ],
+    "analyze": "Task completed successfully and no errors were observed in shell commands, all required inputs exist and dependencies are installed",
+    "output_filename": [
+        "./output/cell_annotation/malignant_classification.h5ad: Annotated single-cell dataset with malignant/non-malignant classification"
+    ],
+    "stats": true
+}

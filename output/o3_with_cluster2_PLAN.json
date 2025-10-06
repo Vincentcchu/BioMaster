@@ -1,0 +1,84 @@
+{
+    "plan": [
+        {
+            "step_number": 1,
+            "description": "Read the single-cell RNA-seq dataset using Scanpy to generate an AnnData object. This step loads the .h5ad file containing gene expression profiles, cell barcodes, gene names, and initial clustering information.",
+            "input_filename": [
+                "/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/remove_label/dataset_restricted_with_cluster.h5ad: A unannotated single-cell RNA-seq breast cancer dataset containing gene expression profiles with cell barcodes, gene names, and clustering information."
+            ],
+            "output_filename": [
+                "./output/o3_with_cluster2/initial_adata.h5ad: Initial AnnData object loaded from dataset"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 2,
+            "description": "Perform quality control (QC) and filter low-quality cells based on metrics such as the percentage of mitochondrial genes, total UMIs, and number of detected genes. This filtering ensures that only high-quality cells are retained for downstream analysis.",
+            "input_filename": [
+                "./output/o3_with_cluster2/initial_adata.h5ad: Initial AnnData object loaded from dataset"
+            ],
+            "output_filename": [
+                "./output/o3_with_cluster2/filtered_adata.h5ad: QC-filtered AnnData object"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 3,
+            "description": "Normalize the filtered data and identify highly variable genes (HVGs) using Scanpy's normalization methods. This prepares the dataset by standardizing gene expression across cells and selecting genes that show significant variability.",
+            "input_filename": [
+                "./output/o3_with_cluster2/filtered_adata.h5ad: QC-filtered AnnData object"
+            ],
+            "output_filename": [
+                "./output/o3_with_cluster2/normalized_adata.h5ad: Normalized AnnData object with highly variable genes"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 4,
+            "description": "Carry out dimensionality reduction and clustering analysis. Run PCA for dimensionality reduction, compute the neighborhood graph, and apply the Leiden algorithm for clustering. Also generate UMAP visualization for an overview of the cellular landscape.",
+            "input_filename": [
+                "./output/o3_with_cluster2/normalized_adata.h5ad: Normalized AnnData object with highly variable genes"
+            ],
+            "output_filename": [
+                "./output/o3_with_cluster2/clustered_adata.h5ad: AnnData object with clustering annotations",
+                "./output/o3_with_cluster2/umap.png: UMAP visualization plot of cell clusters"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 5,
+            "description": "Identify marker genes for each cluster using differential expression analysis with Scanpy's rank_genes_groups function. This step helps to pinpoint genes that are significantly upregulated in specific clusters, which may indicate malignant characteristics.",
+            "input_filename": [
+                "./output/o3_with_cluster2/clustered_adata.h5ad: AnnData object with clustering annotations"
+            ],
+            "output_filename": [
+                "./output/o3_with_cluster2/marker_genes.csv: Table of differentially expressed marker genes per cluster"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 6,
+            "description": "Classify each individual cell as malignant or non-malignant by integrating the marker gene information with known gene signatures of malignancy. Cells exhibiting high expression of malignant markers will be labeled as malignant. This classification can be achieved using Scanpy along with downstream analysis using Python libraries (e.g., pandas) to establish threshold criteria.",
+            "input_filename": [
+                "./output/o3_with_cluster2/clustered_adata.h5ad: AnnData object with clustering annotations",
+                "./output/o3_with_cluster2/marker_genes.csv: Marker gene table"
+            ],
+            "output_filename": [
+                "./output/o3_with_cluster2/cell_malignancy_annotation.csv: CSV file containing cell barcodes with classification as malignant or non-malignant"
+            ],
+            "tools": "Scanpy"
+        },
+        {
+            "step_number": 7,
+            "description": "Save the final annotated AnnData object with the malignant status annotation added to the cell metadata. This output can be used for subsequent biological interpretation or visualization.",
+            "input_filename": [
+                "./output/o3_with_cluster2/clustered_adata.h5ad: AnnData object with clustering annotations",
+                "./output/o3_with_cluster2/cell_malignancy_annotation.csv: Cell malignancy classification file"
+            ],
+            "output_filename": [
+                "./output/o3_with_cluster2/final_annotated_adata.h5ad: Final AnnData object with malignant cell annotations"
+            ],
+            "tools": "Scanpy"
+        }
+    ]
+}

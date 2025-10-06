@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "cat << 'EOF' > ./output/o3_with_cluster2/normalize_hvg.py\nimport scanpy as sc\n\n# Load the QC-filtered AnnData object\nadata = sc.read_h5ad('./output/o3_with_cluster2/filtered_adata.h5ad')\n\n# Normalize the data so that total counts per cell equal 1e4\nsc.pp.normalize_total(adata, target_sum=1e4)\n\n# Log-transform the data\nsc.pp.log1p(adata)\n\n# Identify highly variable genes (HVGs)\nsc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)\n\n# Save the normalized AnnData object including HVG annotations\nadata.write('./output/o3_with_cluster2/normalized_adata.h5ad')\nEOF",
+        "python ./output/o3_with_cluster2/normalize_hvg.py"
+    ],
+    "analyze": "Command execution completed without error all required scanpy based normalization and hvg identification steps were performed correctly",
+    "output_filename": [
+        "./output/o3_with_cluster2/normalized_adata.h5ad: Normalized AnnData object with highly variable genes"
+    ],
+    "stats": true
+}

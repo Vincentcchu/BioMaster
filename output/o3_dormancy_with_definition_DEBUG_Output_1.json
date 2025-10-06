@@ -1,0 +1,13 @@
+{
+    "shell": [
+        "conda install -y scanpy anndata -c conda-forge",
+        "mkdir -p ./output/o3_dormancy_with_definition",
+        "cat << 'EOF' > ./output/o3_dormancy_with_definition/preprocess_scanpy.py\nimport scanpy as sc\nimport os\n\n# Read the single-cell RNA-seq dataset\nadata = sc.read_h5ad(\"/cs/student/projects2/aisd/2024/shekchu/projects/cell_agents/biomaster/output/o3_full_dataset/annotated_cells_fixed_obs_names.h5ad\")\n\n# Basic Quality Control: annotate mitochondrial genes (assuming human gene names start with MT-)\nadata.var['mt'] = adata.var_names.str.startswith('MT-')\nsc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], inplace=True)\n\n# Filter cells: keep cells with at least 500 total counts\nsc.pp.filter_cells(adata, min_counts=500)\n\n# Filter cells: remove cells with more than 20 percent mitochondrial counts\nadata = adata[adata.obs.pct_counts_mt < 20, :]\n\n# Normalization: scale total counts per cell to 10000 and log-transform\nsc.pp.normalize_total(adata, target_sum=1e4)\nsc.pp.log1p(adata)\n\n# Save the preprocessed dataset\noutput_path = \"./output/o3_dormancy_with_definition/preprocessed_annotated_cells.h5ad\"\nadata.write(output_path)\nEOF",
+        "python ./output/o3_dormancy_with_definition/preprocess_scanpy.py"
+    ],
+    "analyze": "The task was executed successfully as the scanpy preprocessing procedure was performed correctly, the python script file was created in the output directory and executed without errors",
+    "output_filename": [
+        "./output/o3_dormancy_with_definition/preprocessed_annotated_cells.h5ad"
+    ],
+    "stats": true
+}

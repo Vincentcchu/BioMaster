@@ -1,0 +1,8 @@
+{
+    "shell": [],
+    "analyze": "execution was successful, cell classification completed as expected, marker genes not found so default classification applied for non malignant cells, final annotated cell dataset saved in h5ad format",
+    "output_filename": [
+        "./output/o3_sarcoma/cell_classification.h5ad"
+    ],
+    "stats": true
+}

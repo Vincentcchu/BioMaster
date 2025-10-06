@@ -1,0 +1,12 @@
+{
+    "shell": [
+        "conda install -y scanpy",
+        "cat << 'EOF' > ./output/o3_sarcoma/marker_gene_analysis.py\nimport scanpy as sc\nimport pandas as pd\n\n# Read the AnnData object with clustering labels\nadata = sc.read_h5ad('./output/o3_sarcoma/clustering_results.h5ad')\n\n# Perform differential expression analysis using Scanpy's rank_genes_groups\nsc.tl.rank_genes_groups(adata, groupby='leiden', method='t-test')\n\n# Extract the results from the analysis\nresult = adata.uns['rank_genes_groups']\ngroups = list(result['names'].dtype.names) if hasattr(result['names'], 'dtype') else list(result['names'].keys())\n\nall_markers = []\nfor group in groups:\n    df = pd.DataFrame({\n        'gene': result['names'][group],\n        'logFC': result['logfoldchanges'][group],\n        'pvals': result['pvals'][group],\n        'adj_pvals': result['pvals_adj'][group]\n    })\n    df['cluster'] = group\n    # Filter marker genes with adjusted p-value less than 0.05 and logFC greater than 1\n    filtered_df = df[(df['adj_pvals'] < 0.05) & (df['logFC'] > 1)]\n    all_markers.append(filtered_df)\n\n# Concatenate results from all clusters and save to a text file\nmarker_genes = pd.concat(all_markers, ignore_index=True)\nmarker_genes.to_csv('./output/o3_sarcoma/marker_genes.txt', sep='\\t', index=False)\nEOF",
+        "python ./output/o3_sarcoma/marker_gene_analysis.py"
+    ],
+    "analyze": "commands executed correctly,no errors detected,workflow meets the requirements",
+    "output_filename": [
+        "./output/o3_sarcoma/marker_genes.txt"
+    ],
+    "stats": true
+}
