@@ -1,8 +1,0 @@
-{
-    "shell": "",
-    "analyze": "the malignant classification script executed successfully, a warning indicated that no marker genes were found, resulting in all cells being annotated as non malignant, the input files and steps meet the requirements",
-    "output_filename": [
-        "./output/cell_annotation_o3mini_instruct2/cell_annotation.h5ad: Single-cell RNA-seq dataset annotated with malignant classification labels"
-    ],
-    "stats": true
-}

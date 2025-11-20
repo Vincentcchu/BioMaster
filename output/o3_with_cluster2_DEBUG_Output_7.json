@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "The pipeline execution result is correct because the final annotated AnnData object was created using scanpy and saved in the designated output directory. Dependencies were installed with conda and the python script was executed successfully",
-    "output_filename": [
-        "./output/o3_with_cluster2/final_annotated_adata.h5ad"
-    ],
-    "stats": true
-}

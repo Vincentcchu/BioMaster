@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "The qc filtering script now creates a boolean column in adata.var for mitochondrial genes and passes a list containing mt as qc_vars period the script reads the initialized anndata object filters cells with pct counts mt less than 20 and total counts at least 500 period the implemented corrections meet the task requirements",
-    "output_filename": [
-        "./output/cell_annotation_o3mini_instruct3/qc_filtered_data.h5ad"
-    ],
-    "stats": true
-}

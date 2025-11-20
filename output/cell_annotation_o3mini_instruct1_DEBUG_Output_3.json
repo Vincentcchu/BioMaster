@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "Task completed successfully, normalization and highly variable gene identification performed, normalized AnnData object saved in the specified output location",
-    "output_filename": [
-        "./output/cell_annotation_o3mini_instruct1/adata_norm.h5ad: Normalized AnnData object with highly variable genes marked"
-    ],
-    "stats": true
-}
