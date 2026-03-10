@@ -1,4 +1,5 @@
-# Ignore dhroma_db directory
+# Ignore chroma_db directory
+chroma_db/
 dhroma_db/
 
 # Ignore data directory
