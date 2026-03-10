@@ -1,9 +1,0 @@
-{
-    "shell": [],
-    "analyze": "Installation of scanpy and matplotlib completed successfully, scanpy workflow script executed without errors, clustering results and umap plot generated as expected",
-    "output_filename": [
-        "./output/cell_annotation_2/clusters_dataset.h5ad",
-        "./output/cell_annotation_2/umap_clusters.png"
-    ],
-    "stats": true
-}

@@ -4,6 +4,12 @@ dhroma_db/
 # Ignore data directory
 data/
 
+# Ignore output directory
+output/
+
+# Ignore figures directory
+figures/
+
 # Large h5ad files
 output/cell_annotation/normalized_dataset.h5ad
 output/cell_annotation/filtered_dataset.h5ad

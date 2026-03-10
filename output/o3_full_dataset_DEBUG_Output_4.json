@@ -1,9 +1,0 @@
-{
-    "shell": [],
-    "analyze": "Task executed successfully no errors detected during scanpy clustering analysis the pca knn leiden and umap steps have been executed correctly meeting the requirements",
-    "output_filename": [
-        "./output/o3_full_dataset/clusters_dataset.h5ad: AnnData object with computed PCA, neighborhood graph, Leiden clusters, and UMAP coordinates",
-        "./output/o3_full_dataset/umap_clusters.png: UMAP plot displaying cell clusters"
-    ],
-    "stats": true
-}

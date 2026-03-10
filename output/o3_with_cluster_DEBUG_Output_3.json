@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "Task executed successfully, marker identification workflow using scanpy was implemented correctly, input files and output file meet expected requirements, dependencies are properly installed, and the code correctly identifies differentially expressed marker genes for each cluster with emphasis on malignant markers",
-    "output_filename": [
-        "./output/o3_with_cluster/marker_genes.txt: list of marker genes per cluster with emphasis on malignant markers"
-    ],
-    "stats": true
-}

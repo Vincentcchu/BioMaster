@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "Task completed successfully using scanpy to normalize total counts per cell apply log transform and identify highly variable genes steps include installation of scanpy creation of output directory writing a python script and executing it; no errors were encountered",
-    "output_filename": [
-        "./output/o3_full_dataset/normalized_dataset.h5ad"
-    ],
-    "stats": true
-}

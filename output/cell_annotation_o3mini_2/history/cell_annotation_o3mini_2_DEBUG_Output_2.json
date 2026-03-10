@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "qc filtering executed successfully using scanpy and correct umi column total_counts was used and resulting ann data object contains high quality cells",
-    "output_filename": [
-        "./output/cell_annotation_2/filtered_dataset.h5ad: AnnData object containing filtered high-quality cells"
-    ],
-    "stats": true
-}

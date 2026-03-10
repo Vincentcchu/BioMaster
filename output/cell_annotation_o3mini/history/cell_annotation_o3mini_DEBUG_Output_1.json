@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "all required files and tools are available and the qc filter script executed successfully no errors observed the dataset debug restricted file is used as expected and the output file has been generated which meets the requirements",
-    "output_filename": [
-        "./output/cell_annotation/filtered_dataset.h5ad: QC-filtered single-cell RNA-seq dataset"
-    ],
-    "stats": true
-}

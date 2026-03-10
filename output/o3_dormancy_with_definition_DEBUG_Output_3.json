@@ -1,8 +1,0 @@
-{
-    "shell": [],
-    "analyze": "The commands executed correctly and the cell cycle scoring script successfully computed cell cycle scores for malignant cells using scanpy and saved the updated dataset under the output folder",
-    "output_filename": [
-        "./output/o3_dormancy_with_definition/malignant_cells_cell_cycle_scores.h5ad: Malignant cells dataset updated with computed cell cycle scores"
-    ],
-    "stats": true
-}
